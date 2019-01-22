@@ -44,6 +44,9 @@ describe('Baskets of various combinations', () => {
   it('[4, 2, 5, 1, 1, 2, 3, 4] costs 51.2 euros', () => {
     expect(baskets([4, 2, 5, 1, 1, 2, 3, 4])).toBe(51.2)
   })
+  it('[4, 2, 5, 1, 1, 2, 3, 4, 1] costs 51.2 + 8 euros', () => {
+    expect(baskets([4, 2, 5, 1, 1, 2, 3, 4, 1])).toBe(51.2 + 8)
+  })
 })
 
 describe('Return unique sets', () => {
@@ -108,7 +111,7 @@ const findUniqueSets = books => {
     ? nbOfOccurencesSorted[0].occurrences
     : 0
 
-  const uniqueSets = new Array(maxNumberOfUniqueSets)
+  let uniqueSets = new Array(maxNumberOfUniqueSets)
 
   for (let i = 0; i < nbOfOccurencesSorted.length; i++) {
     const item = nbOfOccurencesSorted[i]
@@ -119,13 +122,16 @@ const findUniqueSets = books => {
       continue
     }
     let toDispatch = item.occurrences
-    const tmpArray = [...uniqueSets].sort(
-      (a, b) =>
-        a.length === 3 && b.length !== 0
-          ? -1
-          : a.length !== 0 && b.length === 3 ? 1 : b.length - a.length
+    uniqueSets = uniqueSets.sort((a, b) =>
+      a.length === 3 && b.length !== 0
+        ? -1
+        : a.length !== 0 && b.length === 3
+          ? 1
+          : b.length - a.length
     )
-    tmpArray.forEach(arr => {
+    // `uniqueSets` is sorted so that it is preferable to push items in the first cell, then in the second, etc.
+    // We try to have unique sets of 4 items since the discount gap between 3 and 4 items is significant.
+    uniqueSets.forEach(arr => {
       if (toDispatch > 0) {
         arr.push(item.bookNumber)
         toDispatch--
