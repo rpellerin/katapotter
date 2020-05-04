@@ -3,7 +3,7 @@ class Array
     reduce([]) do |arrays, item|
       candidate_arrays = arrays.reject { |array| array.include?(item) }
       candidate_array = candidate_arrays.find { |array| algorithm_next_array.call(array) } || candidate_arrays[0]
-      if (candidate_array.nil?)
+      if candidate_array.nil?
         candidate_array = []
         arrays.push(candidate_array)
       end
