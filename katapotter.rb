@@ -1,6 +1,6 @@
 class Array
   def split_to_uniq(algorithm_next_array: ->(_) { false })
-    reduce([]) do |arrays, item|
+    sort.reduce([]) do |arrays, item|
       candidate_arrays = arrays.reject { |array| array.include?(item) }
       candidate_array = candidate_arrays.find { |array| algorithm_next_array.call(array) } || candidate_arrays[0]
       if candidate_array.nil?
@@ -29,4 +29,5 @@ def price(books)
     .sum
 end
 
-puts price([1,2,3,4,1,2,4,5]) # Should be 51.2
+puts price([1,2,3,4,5,1,2,4]) # Should be 51.2
+puts price([1,2,3,4,1,2,3,5]) # Should be 51.2
